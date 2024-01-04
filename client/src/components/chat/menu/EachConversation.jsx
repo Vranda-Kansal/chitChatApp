@@ -66,7 +66,7 @@ const EachConversation = ({user}) => {
           }
         </Container>
         <Box>
-          <Text> {message?.text?.includes('localhost') ? 'media' : message.text } </Text>
+          <Text> {message?.text?.includes('localhost') ? 'media' : message?.text?.substring(0, 30) + "...."} </Text>
         </Box>
       </Box>
     </Component>

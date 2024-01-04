@@ -13,10 +13,11 @@ export const AccountContext = createContext(null);
 const AccountProvider = (props) => {
 
     //account info
-    const [account, setAccount] = useState();
+    const [account, setAccount] = useState(null);
     const [person, setPerson] = useState({});
     const [activeUsers, setactiveUsers] = useState([]);
     const [newMessageFlag, setNewMessageFlag] = useState(false);
+    const [to, setTo] = useState('hi');
 
     const socket = useRef();
 
@@ -34,7 +35,9 @@ const AccountProvider = (props) => {
             activeUsers,
             setactiveUsers,
             newMessageFlag,
-            setNewMessageFlag
+            setNewMessageFlag,
+            to,
+            setTo
         }}>
             {props.children}
         </AccountContext.Provider>

@@ -1,5 +1,5 @@
 import { Box, Typography, styled } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
 import { AccountContext } from '../../../context/AccountProvider';
 import { formatDate, downloadMedia } from '../../../utils/common-utils';
@@ -7,6 +7,7 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import {iconPDF} from "../../constants/data.js";
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useSpeechSynthesis } from 'react-speech-kit';
+import axios from 'axios';
 
 const Own = styled(Box)`
     background: #dcf8c6;
@@ -48,9 +49,11 @@ const Speaker = styled(VolumeUpIcon)`
 `;
 
 const Message = ({ message }) => {
-    const {account} = useContext(AccountContext);
+    const {account, to} = useContext(AccountContext);
 
     const { speak, voices } = useSpeechSynthesis();
+
+
 
   return (
     <>
@@ -60,7 +63,9 @@ const Message = ({ message }) => {
                 <Own>
                     {
                         message.type === 'file' ? <ImageMessage message = {message} /> : <>
-                        <TextMessage message={message}/>
+                        <TextMessage message={message}
+                        />
+                        {/* {show.length ? <TextMessage message={show} /> : <TextMessage message={message} onMouseOver={() => translate()} />} */}
                         <Speaker onClick={() => speak({ text: message.text, voice: voices[1]})}/>
                         </> 
                     }
@@ -83,6 +88,8 @@ const Message = ({ message }) => {
 }
 
 const ImageMessage = ({message}) => {
+
+
     return(
         <Box style={{position: 'relative'}}>
             {
@@ -106,10 +113,57 @@ const ImageMessage = ({message}) => {
 }
 
 const TextMessage  = ({ message}) => {
+
+    const { to} = useContext(AccountContext);
+
+    const [show, setShow] = useState('');
+    const [flag, setFlag] = useState(false);
+
+    const handleMouseOver = () => {
+        translate();
+    }
+
+    const handleMouseOut = () => {
+        setFlag(false);
+        // setShow(message.text);
+    }
+
+    const translate = () => {
+        // curl -X POST "https://libretranslate.de/translate" -H  "accept: application/json" -H  "Content-Type: application/x-www-form-urlencoded" -d "q=hello&source=en&target=es&api_key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+       console.log("Captured")
+        const params = new URLSearchParams();
+        params.append('q', message.text);
+        params.append('source', 'auto');
+        params.append('target', to);
+        params.append('api_key', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+    
+        axios.post('https://libretranslate.de/translate',params, {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }).then(res=>{
+          console.log(res.data)
+        //   message = res.data.translatedText
+            setFlag(true);
+          setShow(res.data.translatedText);
+          console.log(show);
+        })
+      };
     return (
         <>
-            <Text>{message.text}</Text>
-            <Time>{formatDate(message.createdAt)}</Time>
+        {
+            !flag ?
+            <>
+                <Text onMouseOver={handleMouseOver}>{message.text}</Text>
+                <Time>{formatDate(message.createdAt)}</Time>
+            </>
+             :
+            <>
+                <Text onMouseOut={handleMouseOut}>{show}</Text>
+                <Time>{formatDate(message.createdAt)}</Time>
+            </>
+        }
         </>
     )
 }

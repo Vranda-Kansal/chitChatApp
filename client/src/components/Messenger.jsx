@@ -1,56 +1,50 @@
-import {React, useContext} from 'react'
-import LoginDialog from './account/LoginDialog';
-import { AppBar, Toolbar, styled, Box } from '@mui/material';
-import { AccountContext } from '../context/AccountProvider';
-import ChatDialog from './chat/ChatDialog';
+import { React, useContext } from "react";
+import LoginDialog from "./account/LoginDialog";
+import { AppBar, Toolbar, styled, Box } from "@mui/material";
+import { AccountContext } from "../context/AccountProvider";
+import ChatDialog from "./chat/ChatDialog";
 
 //Styling the header..
 const Header = styled(AppBar)`
-    height: 220px;
-    background-color: #00bfa5;
-    box-shadow: none;
-`
+  height: 220px;
+  background-color: #cab8d4;
+  box-shadow: none;
+`;
 const Component = styled(Box)`
-    height: 100vh;
-    background: #DCDCDC;
+  height: 100vh;
+  background: #dcdcdc;
 `;
 
 //styling the Chat Header...
 const ChatHeader = styled(AppBar)`
   height: 125px;
-  background-color: #00A884;
+  background-color: #cab8d4;
   box-shadow: none;
-`
+`;
 
 function Messenger() {
-
-  const {account} = useContext(AccountContext);
+  const { account } = useContext(AccountContext);
 
   return (
     <Component>
-    {/* if user is logged in then show ChatDialog else show LoginDialog */}
-      {
-        account ?  
+      {/* if user is logged in then show ChatDialog else show LoginDialog */}
+      {account ? (
         <>
           <ChatHeader>
-            <Toolbar>
-
-            </Toolbar>
+            <Toolbar></Toolbar>
           </ChatHeader>
           <ChatDialog />
         </>
-        :
+      ) : (
         <>
           <Header>
-              <Toolbar>
-
-              </Toolbar>
+            <Toolbar></Toolbar>
           </Header>
-          <LoginDialog/>
+          <LoginDialog />
         </>
-      }
+      )}
     </Component>
-  )
+  );
 }
 
 export default Messenger;

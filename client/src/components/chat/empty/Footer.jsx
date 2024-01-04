@@ -1,10 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MicIcon from '@mui/icons-material/Mic';
 import { Box, InputBase, styled } from '@mui/material';
 import { updateFile } from '../../../service/api';
+import { AccountContext } from '../../../context/AccountProvider';
+import axios from 'axios';
 
 
 const Container = styled(Box)`
@@ -40,6 +42,8 @@ const ClipIcon = styled(AttachFileIcon)`
 
 const Footer = ({sendText, setValue, value, file, setFile, setImage}) => {
 
+    const {to} = useContext(AccountContext);
+
     useEffect(() => {
         const getImage = async () => {
             if(file){
@@ -60,6 +64,33 @@ const Footer = ({sendText, setValue, value, file, setFile, setImage}) => {
         setValue(e.target.files[0].name);
     }
 
+    const handleMouseOver = () => {
+        translate();
+    }
+
+    const translate = () => {
+        // curl -X POST "https://libretranslate.de/translate" -H  "accept: application/json" -H  "Content-Type: application/x-www-form-urlencoded" -d "q=hello&source=en&target=es&api_key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    //    console.log("Captured")
+        const params = new URLSearchParams();
+        params.append('q', value);
+        params.append('source', 'auto');
+        params.append('target', to);
+        params.append('api_key', 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+    
+        axios.post('https://libretranslate.de/translate',params, {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }).then(res=>{
+          console.log(res.data)
+        //   message = res.data.translatedText
+            // setFlag(true);
+          setValue(res.data.translatedText);
+        //   console.log(show);
+        })
+      };
+
   return (
     <Container>
         <EmojiEmotionsOutlinedIcon />
@@ -76,6 +107,7 @@ const Footer = ({sendText, setValue, value, file, setFile, setImage}) => {
             <Field 
                 placeholder='Type a message'
                 onChange={(e) => setValue(e.target.value)}
+                onMouseOver={handleMouseOver}
                 onKeyPress= {(e) => sendText(e)}
                 value = {value}
             />

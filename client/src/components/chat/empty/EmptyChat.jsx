@@ -1,7 +1,6 @@
-
-import { Box, Typography, styled } from '@mui/material'
-import React from 'react'
-import { emptyChatImage } from '../../constants/data';
+import { Box, Typography, styled } from "@mui/material";
+import React from "react";
+import emptyChatImage from "../../constants/ChatLogo.png";
 
 const Component = styled(Box)`
   background: #f8f9fa;
@@ -16,8 +15,8 @@ const Container = styled(Box)`
 
 const Image = styled("img")({
   width: 400,
-  marginTop: 100
-})
+  marginTop: 100,
+});
 
 const Title = styled(Typography)`
   font-size: 32px;
@@ -38,13 +37,14 @@ function EmptyChat() {
   return (
     <Component>
       <Container>
-        <Image src={emptyChatImage} alt="empty chat"/>
-        <Title>WhatsApp Web</Title>
-        <SubTitle>Send and receive messages without keeping your phone online.</SubTitle>
-        <SubTitle>Use WhatsApp on up to 4 linked devices and 1 phone at the same time.</SubTitle>
+        <Image src={emptyChatImage} alt="empty chat" />
+        <Title>ChitChat Web</Title>
+        <SubTitle>
+          Send and receive messages without keeping your phone online.
+        </SubTitle>
       </Container>
     </Component>
-  )
+  );
 }
 
 export default EmptyChat;

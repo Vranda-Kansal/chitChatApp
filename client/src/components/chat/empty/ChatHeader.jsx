@@ -1,7 +1,7 @@
 
 
-import { Avatar, Box, Typography, styled } from '@mui/material';
-import React from 'react';
+import { Avatar, Box, Typography, styled, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useContext } from 'react';
@@ -36,9 +36,14 @@ const RightContainer = styled(Box)`
     }
 `;
 
-const ChatHeader = ({person}) => {
+const ChatHeader = ({person, options}) => {
 
-    const {activeUsers} = useContext(AccountContext);
+    const {activeUsers, setTo, to} = useContext(AccountContext);
+
+    const handleChange = (e) => {
+        setTo(e.target.value);
+    }
+
   return (
     <CallContextProvider>
     <Header>
@@ -51,6 +56,20 @@ const ChatHeader = ({person}) => {
             <Call />
             <SearchIcon />
             <MoreVertIcon />
+            <FormControl size = "small" sx={{ minWidth: 160 }}>
+            <InputLabel >Translate picker</InputLabel>
+            <Select
+                value={to}
+                label="Translate picker"
+                onChange={handleChange}
+            >
+                {
+                    options.map( (opt) => (
+                        <MenuItem key={opt.code} value={opt.code}>{opt.name}</MenuItem>
+                    ))
+                }
+            </Select>
+            </FormControl>
         </RightContainer>
     </Header>
     </CallContextProvider>
